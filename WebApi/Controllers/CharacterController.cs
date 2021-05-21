@@ -12,12 +12,22 @@ namespace WebApi.Controllers
     [ApiController]
     public class CharacterController : ControllerBase
     {
-        private static Character knight = new Character();
+        private static List<Character> characters = new List<Character>(){
+            new Character(),
+            new Character{Id = 1, Name = "Sam"}
+        };
 
-        [HttpGet]
-        public ActionResult<Character> Get()
+
+        [HttpGet("GetAll")]
+        public ActionResult<List<Character>> Get()
         {
-            return Ok(knight);
+            return Ok(characters);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<Character> GetSingle(int Id)
+        {
+            return Ok(characters.FirstOrDefault(x=>x.Id == Id));
         }
     }
 }
