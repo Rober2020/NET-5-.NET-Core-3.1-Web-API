@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Models;
+using WebApi.Services.CharacterService;
 
 namespace WebApi.Controllers
 {
@@ -12,22 +13,29 @@ namespace WebApi.Controllers
     [ApiController]
     public class CharacterController : ControllerBase
     {
-        private static List<Character> characters = new List<Character>(){
-            new Character(),
-            new Character{Id = 1, Name = "Sam"}
-        };
+        private readonly ICharacterService _characterService;
 
+        public CharacterController(ICharacterService characterService)
+        {
+            _characterService = characterService;
+        }
 
         [HttpGet("GetAll")]
-        public ActionResult<List<Character>> Get()
+        public async Task<ActionResult<ServiceResponse<List<Character>>>> Get()
         {
-            return Ok(characters);
+            return Ok(await _characterService.GetAllCharacters());
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Character> GetSingle(int Id)
+        public async Task<ActionResult<ServiceResponse<Character>>> GetSingle(int Id)
         {
-            return Ok(characters.FirstOrDefault(x=>x.Id == Id));
+            return Ok(await _characterService.GetCharacterById(Id));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<List<Character>>>> AddCharacter(Character newCharacter)
+        {
+            return Ok(await _characterService.AddCharacter(newCharacter));
         }
     }
 }
