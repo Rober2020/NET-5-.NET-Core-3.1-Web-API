@@ -31,6 +31,25 @@ namespace WebApi.Services.CharacterService
             return  serviceResponse;
         }
 
+        public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter(int id)
+        {
+            var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
+
+            try
+            {
+                Character character = characters.First(x => x.Id == id);
+                characters.Remove(character);
+
+                serviceResponse.Data = characters.Select(x => _mapper.Map<GetCharacterDto>(x)).ToList();
+            } 
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
@@ -44,6 +63,32 @@ namespace WebApi.Services.CharacterService
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
             serviceResponse.Data = _mapper.Map<GetCharacterDto>(characters.FirstOrDefault(x => x.Id == id));
 
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter(UpdateCharacterDto updateCharacter)
+        {
+            var serviceResponse = new ServiceResponse<GetCharacterDto>();
+
+            try
+            {
+                Character character = characters.FirstOrDefault(x => x.Id == updateCharacter.Id);
+
+                character.Name = updateCharacter.Name;
+                character.HitPoints = updateCharacter.HitPoints;
+                character.Strength = updateCharacter.Strength;
+                character.Defense = updateCharacter.Defense;
+                character.Intelligence = updateCharacter.Intelligence;
+                character.Class = updateCharacter.Class;
+
+                serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
+
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
             return serviceResponse;
         }
     }
