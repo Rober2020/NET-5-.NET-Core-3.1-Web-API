@@ -10,7 +10,7 @@ using WebApi.Services.CharacterService;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CharacterController : ControllerBase
     {
@@ -27,7 +27,7 @@ namespace WebApi.Controllers
             return Ok(await _characterService.GetAllCharacters());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{Id}")]
         public async Task<ActionResult<ServiceResponse<GetCharacterDto>>> GetSingle(int Id)
         {
             return Ok(await _characterService.GetCharacterById(Id));
